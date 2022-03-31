@@ -1,0 +1,35 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager-pagerduty-edison
+  namespace: monitoring
+  labels:
+    alertmanagerConfig: pagerduty-edison
+spec:
+  route:
+    # groupBy:
+    #   - namespace
+    # groupWait: 30s
+    # groupInterval: 30s
+    # repeatInterval: 12h
+    receiver: pagerduty-edison # this name is scoped to within this AlertmanagerConfig object
+    matchers:
+        - name: alertname
+          value: ForTest
+  receivers:
+    - name: pagerduty-edison
+      pagerdutyConfigs:
+        - sendResolved: true
+          serviceKey:
+            name: edison-config
+            key: service_key
+
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: edison-config
+  namespace: monitoring
+data:
+  service_key: ZDc4YmZiZjM0NmU1NDYwMmQwZTdhMjY2MTE3M2VlMzQ=

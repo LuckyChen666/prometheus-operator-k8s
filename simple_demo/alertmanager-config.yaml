@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: alertmanager-pagerduty
+  namespace: monitoring
+  labels:
+    alertmanagerConfig: pagerduty
+spec:
+  route:
+    # groupBy:
+    #   - namespace
+    # groupWait: 30s
+    # groupInterval: 30s
+    # repeatInterval: 12h
+    receiver: pagerduty # this name is scoped to within this AlertmanagerConfig object
+  receivers:
+    - name: pagerduty
+      pagerdutyConfigs:
+        - sendResolved: true
+          serviceKey:
+            name: pagerduty-config
+            key: service_key
+
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: pagerduty-config
+  namespace: monitoring
+data:
+  service_key: ZDc4YmZiZjM0NmU1NDYwMmQwZTdhMjY2MTE3M2VlMzQ=
